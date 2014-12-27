@@ -7,13 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8516B7D8EF7864D4A398B8C3 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E7CD53C8077C6D46177C3B /* libPods.a */; };
 		C92B00581A4D59010044FA8E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B00571A4D59010044FA8E /* main.m */; };
 		C92B005B1A4D59010044FA8E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B005A1A4D59010044FA8E /* AppDelegate.m */; };
-		C92B005E1A4D59010044FA8E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B005D1A4D59010044FA8E /* ViewController.m */; };
 		C92B00611A4D59010044FA8E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C92B005F1A4D59010044FA8E /* Main.storyboard */; };
 		C92B00631A4D59010044FA8E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C92B00621A4D59010044FA8E /* Images.xcassets */; };
 		C92B00661A4D59010044FA8E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C92B00641A4D59010044FA8E /* LaunchScreen.xib */; };
 		C92B00721A4D59010044FA8E /* WenluTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B00711A4D59010044FA8E /* WenluTests.m */; };
+		C92B007F1A4D5B0C0044FA8E /* MapCamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B007C1A4D5B0C0044FA8E /* MapCamViewController.m */; };
+		C92B00801A4D5B0C0044FA8E /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B007E1A4D5B0C0044FA8E /* MenuViewController.m */; };
+		C92B00831A4D5B310044FA8E /* AVCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B00821A4D5B310044FA8E /* AVCamPreviewView.m */; };
+		C92B00891A4D6FCF0044FA8E /* AVCamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B00881A4D6FCF0044FA8E /* AVCamViewController.m */; };
+		C92B008E1A4DB22D0044FA8E /* SearchPOI.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B008D1A4DB22D0044FA8E /* SearchPOI.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,19 +32,30 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		41A01B22B536A28878D18501 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		51E7CD53C8077C6D46177C3B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		6C47B9C19AD110A066445DCA /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C92B00521A4D59010044FA8E /* Wenlu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wenlu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C92B00561A4D59010044FA8E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C92B00571A4D59010044FA8E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C92B00591A4D59010044FA8E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C92B005A1A4D59010044FA8E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		C92B005C1A4D59010044FA8E /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		C92B005D1A4D59010044FA8E /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		C92B00601A4D59010044FA8E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C92B00621A4D59010044FA8E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		C92B00651A4D59010044FA8E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		C92B006B1A4D59010044FA8E /* WenluTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WenluTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C92B00701A4D59010044FA8E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C92B00711A4D59010044FA8E /* WenluTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WenluTests.m; sourceTree = "<group>"; };
+		C92B007B1A4D5B0C0044FA8E /* MapCamViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapCamViewController.h; sourceTree = "<group>"; };
+		C92B007C1A4D5B0C0044FA8E /* MapCamViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapCamViewController.m; sourceTree = "<group>"; };
+		C92B007D1A4D5B0C0044FA8E /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
+		C92B007E1A4D5B0C0044FA8E /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
+		C92B00811A4D5B310044FA8E /* AVCamPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVCamPreviewView.h; sourceTree = "<group>"; };
+		C92B00821A4D5B310044FA8E /* AVCamPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVCamPreviewView.m; sourceTree = "<group>"; };
+		C92B00871A4D6FCF0044FA8E /* AVCamViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVCamViewController.h; sourceTree = "<group>"; };
+		C92B00881A4D6FCF0044FA8E /* AVCamViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVCamViewController.m; sourceTree = "<group>"; };
+		C92B008C1A4DB22D0044FA8E /* SearchPOI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SearchPOI.h; path = Model/SearchPOI.h; sourceTree = "<group>"; };
+		C92B008D1A4DB22D0044FA8E /* SearchPOI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SearchPOI.m; path = Model/SearchPOI.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8516B7D8EF7864D4A398B8C3 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,12 +77,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C147D129C421D79C934AA7F7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6C47B9C19AD110A066445DCA /* Pods.debug.xcconfig */,
+				41A01B22B536A28878D18501 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		C92B00491A4D59010044FA8E = {
 			isa = PBXGroup;
 			children = (
 				C92B00541A4D59010044FA8E /* Wenlu */,
 				C92B006E1A4D59010044FA8E /* WenluTests */,
 				C92B00531A4D59010044FA8E /* Products */,
+				C147D129C421D79C934AA7F7 /* Pods */,
+				E447DA33EB0E34DB1EDB36D8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -81,13 +109,9 @@
 		C92B00541A4D59010044FA8E /* Wenlu */ = {
 			isa = PBXGroup;
 			children = (
-				C92B00591A4D59010044FA8E /* AppDelegate.h */,
-				C92B005A1A4D59010044FA8E /* AppDelegate.m */,
-				C92B005C1A4D59010044FA8E /* ViewController.h */,
-				C92B005D1A4D59010044FA8E /* ViewController.m */,
-				C92B005F1A4D59010044FA8E /* Main.storyboard */,
-				C92B00621A4D59010044FA8E /* Images.xcassets */,
-				C92B00641A4D59010044FA8E /* LaunchScreen.xib */,
+				C92B008F1A4DB23D0044FA8E /* Model */,
+				C92B008A1A4D72600044FA8E /* ViewController */,
+				C92B008B1A4D727A0044FA8E /* View */,
 				C92B00551A4D59010044FA8E /* Supporting Files */,
 			);
 			path = Wenlu;
@@ -98,6 +122,11 @@
 			children = (
 				C92B00561A4D59010044FA8E /* Info.plist */,
 				C92B00571A4D59010044FA8E /* main.m */,
+				C92B00591A4D59010044FA8E /* AppDelegate.h */,
+				C92B005A1A4D59010044FA8E /* AppDelegate.m */,
+				C92B00621A4D59010044FA8E /* Images.xcassets */,
+				C92B00641A4D59010044FA8E /* LaunchScreen.xib */,
+				C92B005F1A4D59010044FA8E /* Main.storyboard */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -119,6 +148,45 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		C92B008A1A4D72600044FA8E /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C92B007B1A4D5B0C0044FA8E /* MapCamViewController.h */,
+				C92B007C1A4D5B0C0044FA8E /* MapCamViewController.m */,
+				C92B007D1A4D5B0C0044FA8E /* MenuViewController.h */,
+				C92B007E1A4D5B0C0044FA8E /* MenuViewController.m */,
+				C92B00871A4D6FCF0044FA8E /* AVCamViewController.h */,
+				C92B00881A4D6FCF0044FA8E /* AVCamViewController.m */,
+			);
+			name = ViewController;
+			sourceTree = "<group>";
+		};
+		C92B008B1A4D727A0044FA8E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C92B00811A4D5B310044FA8E /* AVCamPreviewView.h */,
+				C92B00821A4D5B310044FA8E /* AVCamPreviewView.m */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		C92B008F1A4DB23D0044FA8E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C92B008C1A4DB22D0044FA8E /* SearchPOI.h */,
+				C92B008D1A4DB22D0044FA8E /* SearchPOI.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		E447DA33EB0E34DB1EDB36D8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				51E7CD53C8077C6D46177C3B /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -126,9 +194,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C92B00751A4D59010044FA8E /* Build configuration list for PBXNativeTarget "Wenlu" */;
 			buildPhases = (
+				A0BFA9F41BEEBF37D1334AB6 /* Check Pods Manifest.lock */,
 				C92B004E1A4D59010044FA8E /* Sources */,
 				C92B004F1A4D59010044FA8E /* Frameworks */,
 				C92B00501A4D59010044FA8E /* Resources */,
+				A22D575E83F3F859D13853FE /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -214,14 +284,51 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		A0BFA9F41BEEBF37D1334AB6 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		A22D575E83F3F859D13853FE /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		C92B004E1A4D59010044FA8E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C92B005E1A4D59010044FA8E /* ViewController.m in Sources */,
 				C92B005B1A4D59010044FA8E /* AppDelegate.m in Sources */,
+				C92B00831A4D5B310044FA8E /* AVCamPreviewView.m in Sources */,
 				C92B00581A4D59010044FA8E /* main.m in Sources */,
+				C92B007F1A4D5B0C0044FA8E /* MapCamViewController.m in Sources */,
+				C92B008E1A4DB22D0044FA8E /* SearchPOI.m in Sources */,
+				C92B00891A4D6FCF0044FA8E /* AVCamViewController.m in Sources */,
+				C92B00801A4D5B0C0044FA8E /* MenuViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,6 +450,7 @@
 		};
 		C92B00761A4D59010044FA8E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6C47B9C19AD110A066445DCA /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Wenlu/Info.plist;
@@ -353,6 +461,7 @@
 		};
 		C92B00771A4D59010044FA8E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 41A01B22B536A28878D18501 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Wenlu/Info.plist;
@@ -414,6 +523,7 @@
 				C92B00771A4D59010044FA8E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C92B00781A4D59010044FA8E /* Build configuration list for PBXNativeTarget "WenluTests" */ = {
 			isa = XCConfigurationList;
@@ -422,6 +532,7 @@
 				C92B007A1A4D59010044FA8E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
