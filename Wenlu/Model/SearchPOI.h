@@ -10,7 +10,7 @@
 
 @interface SearchPOI : NSObject
 
-- (void)start;
-- (void)stop;
+//- (void)start;
+//- (void)stop;
 
 @end

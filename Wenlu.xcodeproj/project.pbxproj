@@ -19,6 +19,17 @@
 		C92B00831A4D5B310044FA8E /* AVCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B00821A4D5B310044FA8E /* AVCamPreviewView.m */; };
 		C92B00891A4D6FCF0044FA8E /* AVCamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B00881A4D6FCF0044FA8E /* AVCamViewController.m */; };
 		C92B008E1A4DB22D0044FA8E /* SearchPOI.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B008D1A4DB22D0044FA8E /* SearchPOI.m */; };
+		C92B00941A4E9B690044FA8E /* location_no@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C92B00911A4E9B690044FA8E /* location_no@2x.png */; };
+		C92B00951A4E9B690044FA8E /* location_yes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C92B00921A4E9B690044FA8E /* location_yes@2x.png */; };
+		C92B00961A4E9B690044FA8E /* search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C92B00931A4E9B690044FA8E /* search@2x.png */; };
+		C92B009D1A4FE15D0044FA8E /* PlaceOfInterest.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B009C1A4FE15D0044FA8E /* PlaceOfInterest.m */; };
+		C92B00A01A4FE1F90044FA8E /* ARView.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B009F1A4FE1F90044FA8E /* ARView.m */; };
+		C92B00A21A4FEBC60044FA8E /* Restautant.png in Resources */ = {isa = PBXBuildFile; fileRef = C92B00A11A4FEBC60044FA8E /* Restautant.png */; };
+		C92B00B51A4FF0B80044FA8E /* events.plist in Resources */ = {isa = PBXBuildFile; fileRef = C92B00AC1A4FF0B80044FA8E /* events.plist */; };
+		C92B00B71A4FF12B0044FA8E /* Hotel.png in Resources */ = {isa = PBXBuildFile; fileRef = C92B00B61A4FF12B0044FA8E /* Hotel.png */; };
+		C92B00B91A4FF1630044FA8E /* Market.png in Resources */ = {isa = PBXBuildFile; fileRef = C92B00B81A4FF1630044FA8E /* Market.png */; };
+		C92B00BB1A4FF1BE0044FA8E /* KTV.png in Resources */ = {isa = PBXBuildFile; fileRef = C92B00BA1A4FF1BE0044FA8E /* KTV.png */; };
+		C92B00BE1A4FF6D40044FA8E /* Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B00BD1A4FF6D40044FA8E /* Cell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +67,20 @@
 		C92B00881A4D6FCF0044FA8E /* AVCamViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVCamViewController.m; sourceTree = "<group>"; };
 		C92B008C1A4DB22D0044FA8E /* SearchPOI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SearchPOI.h; path = Model/SearchPOI.h; sourceTree = "<group>"; };
 		C92B008D1A4DB22D0044FA8E /* SearchPOI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SearchPOI.m; path = Model/SearchPOI.m; sourceTree = "<group>"; };
+		C92B00911A4E9B690044FA8E /* location_no@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "location_no@2x.png"; sourceTree = "<group>"; };
+		C92B00921A4E9B690044FA8E /* location_yes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "location_yes@2x.png"; sourceTree = "<group>"; };
+		C92B00931A4E9B690044FA8E /* search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search@2x.png"; sourceTree = "<group>"; };
+		C92B009B1A4FE15D0044FA8E /* PlaceOfInterest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceOfInterest.h; sourceTree = "<group>"; };
+		C92B009C1A4FE15D0044FA8E /* PlaceOfInterest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceOfInterest.m; sourceTree = "<group>"; };
+		C92B009E1A4FE1F90044FA8E /* ARView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARView.h; sourceTree = "<group>"; };
+		C92B009F1A4FE1F90044FA8E /* ARView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARView.m; sourceTree = "<group>"; };
+		C92B00A11A4FEBC60044FA8E /* Restautant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Restautant.png; path = ../Resource/Restautant.png; sourceTree = "<group>"; };
+		C92B00AC1A4FF0B80044FA8E /* events.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = events.plist; sourceTree = "<group>"; };
+		C92B00B61A4FF12B0044FA8E /* Hotel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Hotel.png; sourceTree = "<group>"; };
+		C92B00B81A4FF1630044FA8E /* Market.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Market.png; sourceTree = "<group>"; };
+		C92B00BA1A4FF1BE0044FA8E /* KTV.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = KTV.png; sourceTree = "<group>"; };
+		C92B00BC1A4FF6D40044FA8E /* Cell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cell.h; path = Cell/Cell.h; sourceTree = "<group>"; };
+		C92B00BD1A4FF6D40044FA8E /* Cell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Cell.m; path = Cell/Cell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +134,8 @@
 		C92B00541A4D59010044FA8E /* Wenlu */ = {
 			isa = PBXGroup;
 			children = (
+				C92B00A31A4FF0B80044FA8E /* Map_Pic */,
+				C92B00901A4E9B690044FA8E /* Resource */,
 				C92B008F1A4DB23D0044FA8E /* Model */,
 				C92B008A1A4D72600044FA8E /* ViewController */,
 				C92B008B1A4D727A0044FA8E /* View */,
@@ -157,6 +184,8 @@
 				C92B007E1A4D5B0C0044FA8E /* MenuViewController.m */,
 				C92B00871A4D6FCF0044FA8E /* AVCamViewController.h */,
 				C92B00881A4D6FCF0044FA8E /* AVCamViewController.m */,
+				C92B00BC1A4FF6D40044FA8E /* Cell.h */,
+				C92B00BD1A4FF6D40044FA8E /* Cell.m */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -175,8 +204,35 @@
 			children = (
 				C92B008C1A4DB22D0044FA8E /* SearchPOI.h */,
 				C92B008D1A4DB22D0044FA8E /* SearchPOI.m */,
+				C92B009B1A4FE15D0044FA8E /* PlaceOfInterest.h */,
+				C92B009C1A4FE15D0044FA8E /* PlaceOfInterest.m */,
+				C92B009E1A4FE1F90044FA8E /* ARView.h */,
+				C92B009F1A4FE1F90044FA8E /* ARView.m */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		C92B00901A4E9B690044FA8E /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				C92B00911A4E9B690044FA8E /* location_no@2x.png */,
+				C92B00921A4E9B690044FA8E /* location_yes@2x.png */,
+				C92B00931A4E9B690044FA8E /* search@2x.png */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		C92B00A31A4FF0B80044FA8E /* Map_Pic */ = {
+			isa = PBXGroup;
+			children = (
+				C92B00BA1A4FF1BE0044FA8E /* KTV.png */,
+				C92B00B81A4FF1630044FA8E /* Market.png */,
+				C92B00B61A4FF12B0044FA8E /* Hotel.png */,
+				C92B00A11A4FEBC60044FA8E /* Restautant.png */,
+				C92B00AC1A4FF0B80044FA8E /* events.plist */,
+			);
+			name = Map_Pic;
+			path = Olympics_Pic;
 			sourceTree = "<group>";
 		};
 		E447DA33EB0E34DB1EDB36D8 /* Frameworks */ = {
@@ -269,8 +325,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C92B00961A4E9B690044FA8E /* search@2x.png in Resources */,
+				C92B00A21A4FEBC60044FA8E /* Restautant.png in Resources */,
+				C92B00941A4E9B690044FA8E /* location_no@2x.png in Resources */,
+				C92B00B71A4FF12B0044FA8E /* Hotel.png in Resources */,
+				C92B00951A4E9B690044FA8E /* location_yes@2x.png in Resources */,
 				C92B00611A4D59010044FA8E /* Main.storyboard in Resources */,
+				C92B00B51A4FF0B80044FA8E /* events.plist in Resources */,
+				C92B00BB1A4FF1BE0044FA8E /* KTV.png in Resources */,
 				C92B00661A4D59010044FA8E /* LaunchScreen.xib in Resources */,
+				C92B00B91A4FF1630044FA8E /* Market.png in Resources */,
 				C92B00631A4D59010044FA8E /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -324,8 +388,11 @@
 			files = (
 				C92B005B1A4D59010044FA8E /* AppDelegate.m in Sources */,
 				C92B00831A4D5B310044FA8E /* AVCamPreviewView.m in Sources */,
+				C92B00A01A4FE1F90044FA8E /* ARView.m in Sources */,
 				C92B00581A4D59010044FA8E /* main.m in Sources */,
 				C92B007F1A4D5B0C0044FA8E /* MapCamViewController.m in Sources */,
+				C92B00BE1A4FF6D40044FA8E /* Cell.m in Sources */,
+				C92B009D1A4FE15D0044FA8E /* PlaceOfInterest.m in Sources */,
 				C92B008E1A4DB22D0044FA8E /* SearchPOI.m in Sources */,
 				C92B00891A4D6FCF0044FA8E /* AVCamViewController.m in Sources */,
 				C92B00801A4D5B0C0044FA8E /* MenuViewController.m in Sources */,

@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MenuViewController : UIViewController
+@interface MenuViewController : UICollectionViewController
+
+@property (strong, nonatomic) NSArray *events;
 
 @end
