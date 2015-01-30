@@ -39,22 +39,6 @@
 
 @implementation MenuViewController
 
-- (IBAction)restaurant:(UIButton *)sender {
-    if (self.currentLocation == nil || self.search == nil)
-    {
-        NSLog(@"search failed");
-        return;
-    }
-    
-    AMapPlaceSearchRequest *request = [[AMapPlaceSearchRequest alloc] init];
-    request.searchType = AMapSearchType_PlaceAround;
-    request.location = [AMapGeoPoint locationWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
-    
-    request.keywords = sender.titleLabel.text;
-    
-    [self.search AMapPlaceSearch:request];
-}
-
 
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -67,8 +51,9 @@
     else if ([segue.identifier isEqualToString:@"Show MyCam"]) {
         NSLog(@"prepareForSegue");
         if ([segue.destinationViewController isKindOfClass:[MapCamViewController class]]) {
-            //            TextStatsViewController *tsvc = (TextStatsViewController *)segue.destinationViewController;
-            //          tsvc.textToAnalyze = self.body.textStorage;
+            //Let the pointer mcvc points to destinationViewController, we don't create a new object but just a point. 2015-01-24
+            MapCamViewController *mcvc = (MapCamViewController *)segue.destinationViewController;
+            mcvc.places = self.pois;
         }
     }
 }

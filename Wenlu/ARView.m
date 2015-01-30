@@ -139,9 +139,6 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 //    NSLog(@"userLocation: %@", userLocation.location);
     if (updatingLocation == true) {
         currentLocation = [userLocation.location copy];
-//        NSLog(@"curLocation: %@", currentLocation);
-//        NSLog(@"curLocation.altitude: %f", currentLocation.altitude);
-        //    NSLog(@"ARViewlocation: %@", location);
         if (placesOfInterest != nil) {
             [self updatePlacesOfInterestCoordinates];
         }
@@ -606,52 +603,7 @@ void transformFromCMRotationMatrixStd(vec4f_t mout, const CMRotationMatrix *m)
      r.m21: 0.218153, r.m22: 0.975763, r.m23: -0.017207,
      r.m31: 0.018254, r.m32: 0.013549, r.m33: 0.999742
      */
-#if false
-#ifdef IOS_MATRIX_VECTOR
-    
-    mout[0] = 0.975744;
-    mout[1] = 0.218153;
-    mout[2] = 0.018254;
-    mout[3] = 0.0f;
-    
-    mout[4] = -0.218411;
-    mout[5] = 0.975763;
-    mout[6] = 0.013549;
-    mout[7] = 0.0f;
-    
-    mout[8] = -0.014855;
-    mout[9] = -0.017207;
-    mout[10] = 0.999742;
-    mout[11] = 0.0f;
-    
-    mout[12] = 0.0f;
-    mout[13] = 0.0f;
-    mout[14] = 0.0f;
-    mout[15] = 1.0f;
-    
-#else
-    
-    mout[0] = 0.975744f;
-    mout[1] = -0.218411;
-    mout[2] = -0.014855;
-    mout[3] = 0.0f;
-    
-    mout[4] = 0.218153;
-    mout[5] = 0.975763;
-    mout[6] = -0.017207;
-    mout[7] = 0.0f;
-    
-    mout[8] = 0.018254;
-    mout[9] = 0.013549;
-    mout[10] = 0.999742;
-    mout[11] = 0.0f;
-    
-    mout[12] = 0.0f;
-    mout[13] = 0.0f;
-    mout[14] = 0.0f;
-    mout[15] = 1.0f;
-#endif
-#endif
+
 #ifdef IOS_MATRIX_VECTOR
     mout[0] = (float)m->m11;
     mout[1] = (float)m->m21;

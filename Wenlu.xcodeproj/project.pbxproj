@@ -23,13 +23,15 @@
 		C92B00951A4E9B690044FA8E /* location_yes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C92B00921A4E9B690044FA8E /* location_yes@2x.png */; };
 		C92B00961A4E9B690044FA8E /* search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C92B00931A4E9B690044FA8E /* search@2x.png */; };
 		C92B009D1A4FE15D0044FA8E /* PlaceOfInterest.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B009C1A4FE15D0044FA8E /* PlaceOfInterest.m */; };
-		C92B00A01A4FE1F90044FA8E /* ARView.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B009F1A4FE1F90044FA8E /* ARView.m */; };
 		C92B00A21A4FEBC60044FA8E /* Restautant.png in Resources */ = {isa = PBXBuildFile; fileRef = C92B00A11A4FEBC60044FA8E /* Restautant.png */; };
 		C92B00B51A4FF0B80044FA8E /* events.plist in Resources */ = {isa = PBXBuildFile; fileRef = C92B00AC1A4FF0B80044FA8E /* events.plist */; };
 		C92B00B71A4FF12B0044FA8E /* Hotel.png in Resources */ = {isa = PBXBuildFile; fileRef = C92B00B61A4FF12B0044FA8E /* Hotel.png */; };
 		C92B00B91A4FF1630044FA8E /* Market.png in Resources */ = {isa = PBXBuildFile; fileRef = C92B00B81A4FF1630044FA8E /* Market.png */; };
 		C92B00BB1A4FF1BE0044FA8E /* KTV.png in Resources */ = {isa = PBXBuildFile; fileRef = C92B00BA1A4FF1BE0044FA8E /* KTV.png */; };
 		C92B00BE1A4FF6D40044FA8E /* Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = C92B00BD1A4FF6D40044FA8E /* Cell.m */; };
+		C9473BEE1A73E11F006D7B4B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9473BED1A73E11F006D7B4B /* CoreGraphics.framework */; };
+		C9473BF01A73E130006D7B4B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9473BEF1A73E130006D7B4B /* Foundation.framework */; };
+		C9473BF21A73E13C006D7B4B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9473BF11A73E13C006D7B4B /* UIKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,8 +74,6 @@
 		C92B00931A4E9B690044FA8E /* search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search@2x.png"; sourceTree = "<group>"; };
 		C92B009B1A4FE15D0044FA8E /* PlaceOfInterest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceOfInterest.h; sourceTree = "<group>"; };
 		C92B009C1A4FE15D0044FA8E /* PlaceOfInterest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceOfInterest.m; sourceTree = "<group>"; };
-		C92B009E1A4FE1F90044FA8E /* ARView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARView.h; sourceTree = "<group>"; };
-		C92B009F1A4FE1F90044FA8E /* ARView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARView.m; sourceTree = "<group>"; };
 		C92B00A11A4FEBC60044FA8E /* Restautant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Restautant.png; path = ../Resource/Restautant.png; sourceTree = "<group>"; };
 		C92B00AC1A4FF0B80044FA8E /* events.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = events.plist; sourceTree = "<group>"; };
 		C92B00B61A4FF12B0044FA8E /* Hotel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Hotel.png; sourceTree = "<group>"; };
@@ -81,6 +81,9 @@
 		C92B00BA1A4FF1BE0044FA8E /* KTV.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = KTV.png; sourceTree = "<group>"; };
 		C92B00BC1A4FF6D40044FA8E /* Cell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cell.h; path = Cell/Cell.h; sourceTree = "<group>"; };
 		C92B00BD1A4FF6D40044FA8E /* Cell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Cell.m; path = Cell/Cell.m; sourceTree = "<group>"; };
+		C9473BED1A73E11F006D7B4B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		C9473BEF1A73E130006D7B4B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		C9473BF11A73E13C006D7B4B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +91,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9473BF21A73E13C006D7B4B /* UIKit.framework in Frameworks */,
+				C9473BF01A73E130006D7B4B /* Foundation.framework in Frameworks */,
+				C9473BEE1A73E11F006D7B4B /* CoreGraphics.framework in Frameworks */,
 				8516B7D8EF7864D4A398B8C3 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -206,8 +212,6 @@
 				C92B008D1A4DB22D0044FA8E /* SearchPOI.m */,
 				C92B009B1A4FE15D0044FA8E /* PlaceOfInterest.h */,
 				C92B009C1A4FE15D0044FA8E /* PlaceOfInterest.m */,
-				C92B009E1A4FE1F90044FA8E /* ARView.h */,
-				C92B009F1A4FE1F90044FA8E /* ARView.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -238,6 +242,9 @@
 		E447DA33EB0E34DB1EDB36D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C9473BF11A73E13C006D7B4B /* UIKit.framework */,
+				C9473BEF1A73E130006D7B4B /* Foundation.framework */,
+				C9473BED1A73E11F006D7B4B /* CoreGraphics.framework */,
 				51E7CD53C8077C6D46177C3B /* libPods.a */,
 			);
 			name = Frameworks;
@@ -388,7 +395,6 @@
 			files = (
 				C92B005B1A4D59010044FA8E /* AppDelegate.m in Sources */,
 				C92B00831A4D5B310044FA8E /* AVCamPreviewView.m in Sources */,
-				C92B00A01A4FE1F90044FA8E /* ARView.m in Sources */,
 				C92B00581A4D59010044FA8E /* main.m in Sources */,
 				C92B007F1A4D5B0C0044FA8E /* MapCamViewController.m in Sources */,
 				C92B00BE1A4FF6D40044FA8E /* Cell.m in Sources */,

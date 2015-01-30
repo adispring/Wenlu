@@ -7,19 +7,34 @@
 //
 
 #import "MapCamViewController.h"
+#import "AVCamPreviewView.h"
+#import "PlaceOfInterest.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
-
-#import "AVCamPreviewView.h"
+#import <MAMapKit/MAMapKit.h>
+#import <AMapSearchKit/AMapSearchAPI.h>
 
 #define APIKey  @"1648f9781b1ce1387c2127536b332c12"
 
-@interface MapCamViewController ()
+#pragma mark - 
+#pragma mark Math utilities declaration
+
+
+@interface MapCamViewController ()<AMapSearchDelegate,MAMapViewDelegate>
+{
+
+
+}
 
 // For use in the storyboards.
 
 @property (weak, nonatomic) IBOutlet AVCamPreviewView *mapPreviewView;
+@property (nonatomic, strong) NSArray *placesOfInterest;
+
+@property (nonatomic, strong) MAMapView *mapView;
+@property (nonatomic, strong) AMapSearchAPI *search;
+@property (nonatomic, strong) CLLocation *currentLocation;
 
 // Session management.
 @property (nonatomic) dispatch_queue_t sessionQueue; // Communicate with the session and other session objects on this queue.
@@ -36,6 +51,32 @@
 @end
 
 @implementation MapCamViewController
+
+#pragma mark - AutoNavi Init
+- (void)initMapView
+{
+    [MAMapServices sharedServices].apiKey = APIKey;
+    self.mapView = [[MAMapView alloc] init];
+    
+    self.mapView.delegate = self;
+    
+    self.mapView.showsUserLocation = YES;
+}
+
+- (void)initSearch
+{
+    //MAMapServices is the root of other GaoDe Services? try delete it 2014-12-13
+    [MAMapServices sharedServices].apiKey = APIKey;
+    self.search = [[AMapSearchAPI alloc] initWithSearchKey:APIKey Delegate:self];
+}
+
+- (void)mapView:(MAMapView *)mapView didUpdateUserLocation:(MAUserLocation *)userLocation updatingLocation:(BOOL)updatingLocation
+{
+    //    NSLog(@"userLocation: %@", userLocation.location);
+    self.currentLocation = [userLocation.location copy];
+}
+
+#pragma - Check iPAD status
 
 - (BOOL)isSessionRunningAndDeviceAuthorized
 {
@@ -70,7 +111,7 @@
 }
 
 
-#pragma mark UI
+#pragma mark - UI
 
 - (void)checkDeviceAuthorizationStatus
 {
@@ -167,7 +208,55 @@
 {
     [super viewDidLoad];
     
+#ifndef MCVC
+#if true
+    [self initMapView];
+    [self initSearch];
+    
+     AVCamPreviewView *mapView = (AVCamPreviewView *)self.view;
+    
+    // Create array of hard-coded places-of-interest, in this case some famous parks
+    const char *poiNames[] = {
+        "Jinan Railway Station JN",
+        "QingDao Railway Station QD",
+        "HUANGJIA ZHUTI CANTING SHANDABEILU",
+        "Hyde Park UK",
+        "Mont Royal QC",
+        "Retiro Park ES"};
+    
+    CLLocationCoordinate2D poiCoords[] = {
+        {36.6712, 116.99089000000004},
+        {36.06547, 117.056056},
+        {36.679618, 117.060371},
+        {51.5068670, -0.1708030},
+        {45.5126399, -73.6802448},
+        {40.4152519, -3.6887466}};
+    
+    int numPois = sizeof(poiCoords) / sizeof(CLLocationCoordinate2D);
+    
+    NSMutableArray *pOfI = [NSMutableArray arrayWithCapacity:numPois];
+    for (int i = 0; i < numPois; i++) {
+        UILabel *label = [[UILabel alloc] init];
+        label.adjustsFontSizeToFitWidth = NO;
+        label.opaque = NO;
+        label.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:0.5f];
+        label.center = CGPointMake(200.0f, 200.0f);
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor whiteColor];
+        label.text = [NSString stringWithCString:poiNames[i] encoding:NSASCIIStringEncoding];
+        //        CGSize size = [label.text sizeWithFont:label.font];
+        CGSize size = [label.text sizeWithAttributes:@ {NSFontAttributeName: label.font}];
+        label.bounds = CGRectMake(0.0f, 0.0f, size.width, size.height);
+        
+        PlaceOfInterest *poi = [PlaceOfInterest placeOfInterestWithView:label at:[[CLLocation alloc] initWithLatitude:poiCoords[i].latitude longitude:poiCoords[i].longitude]];
+        [pOfI insertObject:poi atIndex:i];
+    }
+    [mapView setPlacesOfInterest:pOfI];
+#endif
+#else
+   
     // Create the AVCaptureSession
+
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     [self setSession:session];
     
@@ -211,28 +300,22 @@
             });
         }
         
-        AVCaptureDevice *audioDevice = [[AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio] firstObject];
-        AVCaptureDeviceInput *audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:audioDevice error:&error];
-        
-        if (error)
-        {
-            NSLog(@"%@", error);
-        }
-        
-        if ([session canAddInput:audioDeviceInput])
-        {
-            [session addInput:audioDeviceInput];
-        }
-        
     });
+#endif
 }
 
 
 - (void)viewWillAppear:(BOOL)animated
 {
+#ifndef MCVC
+    [super viewWillAppear:animated];
+    AVCamPreviewView *mapView = (AVCamPreviewView *)self.view;
+    [mapView start];
+#else
     dispatch_async([self sessionQueue], ^{
         [[self session] startRunning];
     });
+#endif
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -240,17 +323,8 @@
     
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 @end
+
+
+
+

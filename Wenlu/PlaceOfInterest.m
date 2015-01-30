@@ -54,7 +54,7 @@
 
 - (id)init
 {
-//    NSLog(@"PlaceOfInterest's init");
+    NSLog(@"PlaceOfInterest's init");
     self = [super init];
     if (self) {
 			view = nil;

@@ -67,7 +67,7 @@
                         <viewControllerLayoutGuide type="top" id="Ygd-Ec-Afj"/>
                         <viewControllerLayoutGuide type="bottom" id="k2e-e6-9EB"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="G2A-Rd-KTg">
+                    <view key="view" contentMode="scaleToFill" id="G2A-Rd-KTg" customClass="AVCamPreviewView">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -81,7 +81,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="1zG-nV-pae"/>
                     <connections>
-                        <outlet property="mapPreviewView" destination="0Ib-3i-8M4" id="Qv0-84-7cx"/>
+                        <outlet property="mapPreviewView" destination="0Ib-3i-8M4" id="An2-if-S4D"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kNA-Te-zZF" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -10,4 +10,6 @@
 
 @interface MapCamViewController : UIViewController
 
+@property (nonatomic, strong) NSArray *places;
+
 @end
