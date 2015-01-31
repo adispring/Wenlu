@@ -76,6 +76,35 @@
     self.currentLocation = [userLocation.location copy];
 }
 
+
+- (void)initPOIWithPlaces:(NSArray*)placesOfI
+{
+    AVCamPreviewView *mapView = (AVCamPreviewView *)self.view;
+    
+    // Create array of hard-coded places-of-interest, in this case some famous parks
+    
+    NSMutableArray *pOfI = [NSMutableArray array];
+    for (AMapPOI *poigd in placesOfI){
+        UILabel *label = [[UILabel alloc] init];
+        label.adjustsFontSizeToFitWidth = NO;
+        label.opaque = NO;
+        label.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:0.5f];
+        label.center = CGPointMake(200.0f, 200.0f);
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor whiteColor];
+        label.text = [NSString stringWithFormat:@"%@:%ldM",poigd.name,(long)poigd.distance];//poigd.name;
+        //            CGSize size = [label.text sizeWithFont:label.font];
+        CGSize size = [label.text sizeWithAttributes:@ {NSFontAttributeName: label.font}];
+        label.bounds = CGRectMake(0.0f, 0.0f, size.width, size.height);
+        
+        PlaceOfInterest *poi = [PlaceOfInterest placeOfInterestWithView:label at:[[CLLocation alloc] initWithLatitude:poigd.location.latitude longitude:poigd.location.longitude]];
+        //            NSLog(@"poigd.location.longitude: %@",poigd.)
+        [pOfI addObject:poi];
+    }
+    
+    [mapView setPlacesOfInterest:pOfI];
+}
+
 #pragma - Check iPAD status
 
 - (BOOL)isSessionRunningAndDeviceAuthorized
@@ -202,136 +231,15 @@
 }
 
 
+
 #pragma mark - View Loading
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-#ifndef MCVC
-#if true
     [self initMapView];
     [self initSearch];
-//#define COR_TEST
-#ifdef COR_TEST
-     AVCamPreviewView *mapView = (AVCamPreviewView *)self.view;
-    
-    // Create array of hard-coded places-of-interest, in this case some famous parks
-
-    const char *poiNames[] = {
-        "Jinan Railway Station JN",
-        "QingDao Railway Station QD",
-        "HUANGJIA ZHUTI CANTING SHANDABEILU",
-        "Hyde Park UK",
-        "Mont Royal QC",
-        "Retiro Park ES"};
-    
-    CLLocationCoordinate2D poiCoords[] = {
-        {36.6712, 116.99089000000004},
-        {36.06547, 117.056056},
-        {36.679618, 117.060371},
-        {51.5068670, -0.1708030},
-        {45.5126399, -73.6802448},
-        {40.4152519, -3.6887466}};
-    
-    int numPois = sizeof(poiCoords) / sizeof(CLLocationCoordinate2D);
-    
-    NSMutableArray *pOfI = [NSMutableArray arrayWithCapacity:numPois];
-    for (int i = 0; i < numPois; i++) {
-        UILabel *label = [[UILabel alloc] init];
-        label.adjustsFontSizeToFitWidth = NO;
-        label.opaque = NO;
-        label.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:0.5f];
-        label.center = CGPointMake(200.0f, 200.0f);
-        label.textAlignment = NSTextAlignmentCenter;
-        label.textColor = [UIColor whiteColor];
-        label.text = [NSString stringWithCString:poiNames[i] encoding:NSASCIIStringEncoding];
-        //        CGSize size = [label.text sizeWithFont:label.font];
-        CGSize size = [label.text sizeWithAttributes:@ {NSFontAttributeName: label.font}];
-        label.bounds = CGRectMake(0.0f, 0.0f, size.width, size.height);
-        
-        PlaceOfInterest *poi = [PlaceOfInterest placeOfInterestWithView:label at:[[CLLocation alloc] initWithLatitude:poiCoords[i].latitude longitude:poiCoords[i].longitude]];
-        [pOfI insertObject:poi atIndex:i];
-    }
-
-    [mapView setPlacesOfInterest:pOfI];
-#else
-    AVCamPreviewView *mapView = (AVCamPreviewView *)self.view;
-    
-    // Create array of hard-coded places-of-interest, in this case some famous parks
-    
-    NSMutableArray *pOfI = [NSMutableArray array];
-    for (AMapPOI *poigd in self.places){
-        UILabel *label = [[UILabel alloc] init];
-        label.adjustsFontSizeToFitWidth = NO;
-        label.opaque = NO;
-        label.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:0.5f];
-        label.center = CGPointMake(200.0f, 200.0f);
-        label.textAlignment = NSTextAlignmentCenter;
-        label.textColor = [UIColor whiteColor];
-        label.text = [NSString stringWithFormat:@"%@:%ldM",poigd.name,(long)poigd.distance];//poigd.name;
-        //            CGSize size = [label.text sizeWithFont:label.font];
-        CGSize size = [label.text sizeWithAttributes:@ {NSFontAttributeName: label.font}];
-        label.bounds = CGRectMake(0.0f, 0.0f, size.width, size.height);
-        
-        PlaceOfInterest *poi = [PlaceOfInterest placeOfInterestWithView:label at:[[CLLocation alloc] initWithLatitude:poigd.location.latitude longitude:poigd.location.longitude]];
-        //            NSLog(@"poigd.location.longitude: %@",poigd.)
-        [pOfI addObject:poi];
-    }
-    
-    [mapView setPlacesOfInterest:pOfI];
-#endif
-    
-#endif
-#else
-   
-    // Create the AVCaptureSession
-
-    AVCaptureSession *session = [[AVCaptureSession alloc] init];
-    [self setSession:session];
-    
-    // Setup the preview view
-    [[self mapPreviewView] setSession:session];
-    
-    // Check for device authorization
-    [self checkDeviceAuthorizationStatus];
-    
-    // In general it is not safe to mutate an AVCaptureSession or any of its inputs, outputs, or connections from multiple threads at the same time.
-    // Why not do all of this on the main queue?
-    // -[AVCaptureSession startRunning] is a blocking call which can take a long time. We dispatch session setup to the sessionQueue so that the main queue isn't blocked (which keeps the UI responsive).
-    
-    dispatch_queue_t sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
-    [self setSessionQueue:sessionQueue];
-    
-    dispatch_async(sessionQueue, ^{
-        [self setBackgroundRecordingID:UIBackgroundTaskInvalid];
-        
-        NSError *error = nil;
-        
-        AVCaptureDevice *videoDevice = [MapCamViewController deviceWithMediaType:AVMediaTypeVideo preferringPosition:AVCaptureDevicePositionBack];
-        AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
-        
-        if (error)
-        {
-            NSLog(@"%@", error);
-        }
-        
-        if ([session canAddInput:videoDeviceInput])
-        {
-            [session addInput:videoDeviceInput];
-            [self setVideoDeviceInput:videoDeviceInput];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // Why are we dispatching this to the main queue?
-                // Because AVCaptureVideoPreviewLayer is the backing layer for AVCamPreviewView and UIView can only be manipulated on main thread.
-                // Note: As an exception to the above rule, it is not necessary to serialize video orientation changes on the AVCaptureVideoPreviewLayer’s connection with other session manipulation.
-                
-                [[(AVCaptureVideoPreviewLayer *)[[self mapPreviewView] layer] connection] setVideoOrientation:(AVCaptureVideoOrientation)[self interfaceOrientation]];
-            });
-        }
-        
-    });
-#endif
+    [self initPOIWithPlaces:self.places];
 }
 
 

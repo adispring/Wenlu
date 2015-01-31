@@ -50,7 +50,7 @@
 #import "MapCamViewController.h"
 
 #import <AVFoundation/AVFoundation.h>
-#import <AssetsLibrary/AssetsLibrary.h>
+//#import <AssetsLibrary/AssetsLibrary.h>
 #import <MAMapKit/MAMapKit.h>
 #import <AMapSearchKit/AMapSearchAPI.h>
 
@@ -102,8 +102,6 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     CADisplayLink *displayLink;
     CMMotionManager *motionManager;
     CLLocationManager *locationManager;
-    double currentYaw;
-    double oldYaw;
 
     NSArray *placesOfInterest;
     mat4f_t projectionTransform;
@@ -114,34 +112,6 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     AMapSearchAPI *search;
     CLLocation *currentLocation;
 }
-
-@property (nonatomic, strong)       AVCaptureSession            * mysession;
-
-//AVCaptureSession对象来执行输入设备和输出设备之间的数据传递
-
-@property (nonatomic, strong)       AVCaptureDeviceInput        * videoInput;
-
-//AVCaptureDeviceInput对象是输入流
-
-@property (nonatomic, strong)       AVCaptureStillImageOutput   * stillImageOutput;
-
-//照片输出流对象，当然我的照相机只有拍照功能，所以只需要这个对象就够了
-
-@property (nonatomic, strong)       AVCaptureVideoPreviewLayer  * previewLayer;
-
-//预览图层，来显示照相机拍摄到的画面
-
-@property (nonatomic, strong)       UIBarButtonItem             * toggleButton;
-
-//切换前后镜头的按钮
-
-@property (nonatomic, strong)       UIButton                    * shutterButton;
-
-//拍照按钮
-
-@property (nonatomic, strong)       UIView                      * cameraShowView;
-
-//放置预览图层的View
 
 
 // Session management.
@@ -167,10 +137,11 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 
 - (void)startDisplayLink;
 - (void)stopDisplayLink;
+- (void)onDisplayLink:(id)sender;
 
 - (void)updatePlacesOfInterestCoordinates;
 
-- (void)onDisplayLink:(id)sender;
+
 
 
 @end
@@ -178,18 +149,14 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 @implementation AVCamPreviewView
 
 
-#pragma mark - AutoNavi & Adi's map api
-
+#pragma mark - Init
 
 - (void)initMapView
 {
     [MAMapServices sharedServices].apiKey = APIKey;
     mapView = [[MAMapView alloc] init];
-    
     mapView.delegate = self;
-    
     //[self.view addSubview:_mapView];
-    
     mapView.showsUserLocation = YES;
 }
 
@@ -200,28 +167,32 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     search = [[AMapSearchAPI alloc] initWithSearchKey:APIKey Delegate:self];
 }
 
-- (void)mapView:(MAMapView *)mapView didUpdateUserLocation:(MAUserLocation *)userLocation updatingLocation:(BOOL)updatingLocation
+- (void)initialize
 {
-    //    NSLog(@"userLocation: %@", userLocation.location);
-    if (updatingLocation == true) {
-        currentLocation = [userLocation.location copy];
-        //        NSLog(@"curLocation: %@", currentLocation);
-        //        NSLog(@"curLocation.altitude: %f", currentLocation.altitude);
-        //    NSLog(@"ARViewlocation: %@", location);
-        if (placesOfInterest != nil) {
-            [self updatePlacesOfInterestCoordinates];
-        }
-    }
-    
+    captureView = self;
+    createProjectionMatrixStd(projectionTransform, 60.0f*DEGREES_TO_RADIANS, self.bounds.size.width*1.0f / self.bounds.size.height,0.25f, 1000.0f);
 }
 
+//rewrite UIView's initWithFrame
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self initialize];
+    }
+    return self;
+}
 
-#pragma mark -
-#pragma mark ARView implementation
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self initialize];
+    }
+    return self;
+}
 
-
-@dynamic placesOfInterest;
-
+#pragma mark - Start & Stop
 - (void)dealloc
 {
     [self stop];
@@ -247,6 +218,178 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     [self stopDisplayLink];
 }
 
+/*
+ 2015-01-29
+ The startCameraPreview's flow chart
+ 1.AVCaptureDevice              defaultDeviceWithMediaType:AVMediaTypeVideo 代表抽象的硬件设备
+ 2.AVCaptureDeviceInput         initWithDevice:AVCaptureDevice  代表输入设备（可以是它的子类），它配置抽象硬件设备的ports
+ 3.AVCaptureSession             addInput:AVCaptureDeviceInput   它是input和output的桥梁。它协调着intput到output的数据传输
+ 4.AVCaptureVideoPreviewLayer   initWithSession:AVCaptureSession
+ 5.UIView.layer                 addSublayer:AVCaptureVideoPreviewLayer
+ 6.dispatch_async               AVCaptureSession
+ */
+
+- (void)startCameraPreview
+{
+    // Check for device authorization
+    [self checkDeviceAuthorizationStatus];
+    
+    //1.create session layer
+    captureSession = [[AVCaptureSession alloc] init];
+    
+    //2.create AVCaptureDevice
+    AVCaptureDevice* camera = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    if (camera == nil) {
+        return;
+    }
+    NSError *error = nil;
+    
+    //3.create AVCaptureDeviceInput initWithDevice:camera
+    AVCaptureDeviceInput *newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:camera error:&error];
+    
+    //4.add AVCaptureDeviceInput to AVCaptureSession
+    [captureSession addInput:newVideoInput];
+    
+    captureLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:captureSession];
+    captureLayer.frame = captureView.bounds;
+    if ([captureLayer respondsToSelector:@selector(connection)]) {
+        if ([captureLayer.connection isVideoOrientationSupported]) {
+            [captureLayer.connection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+        }
+    }
+    [captureLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    [captureView.layer addSublayer:captureLayer];
+    
+    // Start the session. This is done asychronously since -startRunning doesn't return until the session is running.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [captureSession startRunning];
+    });
+}
+
+- (void)stopCameraPreview
+{
+    [captureSession stopRunning];
+    [captureLayer removeFromSuperlayer];
+    captureSession = nil;
+    captureLayer = nil;
+}
+
+- (void)startDeviceMotion
+{
+    motionManager = [[CMMotionManager alloc] init];
+    
+    // Tell CoreMotion to show the compass calibration HUD when required to provide true north-referenced attitude
+    motionManager.showsDeviceMovementDisplay = YES;
+    
+    
+    motionManager.deviceMotionUpdateInterval = 1.0 / 60.0;
+    
+    // New in iOS 5.0: Attitude that is referenced to true north
+    [motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
+}
+
+- (void)stopDeviceMotion
+{
+    [motionManager stopDeviceMotionUpdates];
+    motionManager = nil;
+}
+
+/*
+ 1> 包含QuartzCore框架
+ 2> 固定刷新频率（1秒钟刷新60次）
+ 3> 对刷新速度要求高，适合快刷新
+ 4> 创建displaylink
+ 
+ // 返回一个CADisplayLink计时器对象，1秒内会调用60次target的sel方法，并且将CADisplayLink当做参数传入
+ + (CADisplayLink *)displayLinkWithTarget:(id)target selector:(SEL)sel;
+ 5> 开始计时
+ - (void)addToRunLoop:(NSRunLoop *)runloop forMode:(NSString *)mode;
+ 6> 停止计时
+ - (void)invalidate;
+ 7> 刷帧间隔
+ @property(readonly, nonatomic) CFTimeInterval duration;
+ 8> 控制暂停或者继续
+ @property(getter=isPaused, nonatomic) BOOL paused;
+ 
+ You can associate a display link with multiple input modes. While the run loop is executing in a mode you have specified, the display link notifies the target when new frames are required.
+ 
+ The run loop retains the display link. To remove the display link from all run loops, send an invalidate message to the display link.
+ 
+*/
+
+#pragma mark - displayLink, auto redraw screen
+- (void)startDisplayLink
+{
+    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(onDisplayLink:)];
+    [displayLink setFrameInterval:1];
+    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+}
+
+- (void)stopDisplayLink
+{
+    [displayLink invalidate];
+    displayLink = nil;
+}
+
+- (void)onDisplayLink:(id)sender
+{
+    CMDeviceMotion *d = motionManager.deviceMotion;
+    if (d != nil) {
+        CMRotationMatrix r = d.attitude.rotationMatrix;
+        transformFromCMRotationMatrixStd(cameraTransform, &r);
+        [self setNeedsDisplay];
+    }
+}
+
+- (void)drawRect:(CGRect)rect
+{
+    if (placesOfInterestCoordinates == nil) {
+        return;
+    }
+    
+    mat4f_t projectionCameraTransform;
+    
+    multiplyMatrixAndMatrixStd(projectionCameraTransform, projectionTransform, cameraTransform);
+    int i = 0;
+    for (PlaceOfInterest *poi in [placesOfInterest objectEnumerator]) {
+        vec4f_t v;
+        //        NSLog(@"poi.view: %@",poi.view);
+        multiplyMatrixAndVectorStd(v, projectionCameraTransform, placesOfInterestCoordinates[i]);
+        //        NSLog(@"v[]: %f, %f, %f, %f", v[0],v[1],v[2],v[3]);
+        
+        float x = (v[0] / v[3] + 1.0f) * 0.5f;
+        float y = (v[1] / v[3] + 1.0f) * 0.5f;
+        if (v[2] < 0.0f) {
+            //			poi.view.center = CGPointMake(x*self.bounds.size.width, self.bounds.size.height-y*self.bounds.size.height);
+            // because iOS device's origin(0,0) is on the top left of the screen, and the projection coordinate's origin
+            // is at the bottom left of the screen, so we inverse y axis upsidedown, and keep x axis no change.
+            poi.view.center = CGPointMake(x*self.bounds.size.width, self.bounds.size.height-y*self.bounds.size.height);
+            poi.view.hidden = NO;
+            
+        } else {
+            poi.view.hidden = YES;
+        }
+        i++;
+    }
+    
+}
+
+#pragma mark - UserLocationChanged delegate
+//位置或者设备方向更新后，会调用此函数
+- (void)mapView:(MAMapView *)mapView didUpdateUserLocation:(MAUserLocation *)userLocation updatingLocation:(BOOL)updatingLocation
+{
+    if (updatingLocation == true) {
+        currentLocation = [userLocation.location copy];
+        if (placesOfInterest != nil) {
+            [self updatePlacesOfInterestCoordinates];
+        }
+    }
+    
+}
+
+#pragma mark - placesOfInterest's getter&setter
+@dynamic placesOfInterest;
+
 - (void)setPlacesOfInterest:(NSArray *)pois
 {
     for (PlaceOfInterest *poi in [placesOfInterest objectEnumerator]) {
@@ -265,26 +408,72 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     return placesOfInterest;
 }
 
-- (void)initialize
+- (void)updatePlacesOfInterestCoordinates
 {
-    //    NSLog(@"ARView before: %@", self);
-#if true
-    captureView = self;//[[UIView alloc] initWithFrame:self.bounds];
-//    captureView.bounds = self.bounds;
-//    NSLog(@"self.bounds: x = %f, y = %f, w = %f, h = %f", self.bounds.origin.x,self.bounds.origin.y,self.bounds.size.width,self.bounds.size.height);
-
-//    [self addSubview:captureView];
-//    [self sendSubviewToBack:captureView];
-#endif
-    // Initialize projection matrix
-    //#ifdef
-    //	createProjectionMatrix(projectionTransform, 60.0f*DEGREES_TO_RADIANS, self.bounds.size.width*1.0f / self.bounds.size.height, 0.25f, 1000.0f);
+    NSLog(@"updatePlacesOfInterestCoordinates");
+    if (placesOfInterestCoordinates != NULL) {
+        free(placesOfInterestCoordinates);
+    }
+    placesOfInterestCoordinates = (vec4f_t *)malloc(sizeof(vec4f_t)*placesOfInterest.count);
     
-    createProjectionMatrixStd(projectionTransform, 60.0f*DEGREES_TO_RADIANS, self.bounds.size.width*1.0f / self.bounds.size.height,0.25f, 1000.0f);
+    int i = 0;
+    
+    double myX, myY, myZ;
+    //because AutoNavi's map sdk does not give altitude of poi, so set our altitude = 0 ,too. 2015-01-30
+    //    latLonToEcef(currentLocation.coordinate.latitude, currentLocation.coordinate.longitude, currentLocation.altitude, &myX, &myY, &myZ);
+    latLonToEcef(currentLocation.coordinate.latitude, currentLocation.coordinate.longitude, 0, &myX, &myY, &myZ);
+    
+    // Array of NSData instances, each of which contains a struct with the distance to a POI and the
+    // POI's index into placesOfInterest
+    // Will be used to ensure proper Z-ordering of UIViews
+    typedef struct {
+        float distance;
+        int index;
+    } DistanceAndIndex;
+    NSMutableArray *orderedDistances = [NSMutableArray arrayWithCapacity:placesOfInterest.count];
+    
+    // Compute the world coordinates of each place-of-interest
+    for (PlaceOfInterest *poi in [[self placesOfInterest] objectEnumerator]) {
+        double poiX, poiY, poiZ, e, n, u;
+        //        NSLog(@"curLocation: %@", currentLocation);
+        //        NSLog(@"poi.poi.location.altitude: %f", poi.location.altitude);
+        
+        latLonToEcef(poi.location.coordinate.latitude, poi.location.coordinate.longitude, poi.location.altitude, &poiX, &poiY, &poiZ);
+        ecefToEnu(currentLocation.coordinate.latitude, currentLocation.coordinate.longitude, myX, myY, myZ, poiX, poiY, poiZ, &e, &n, &u);
+        
+        placesOfInterestCoordinates[i][0] = (float)n;
+        placesOfInterestCoordinates[i][1]= -(float)e;
+        placesOfInterestCoordinates[i][2] = (float)u;//0.0f;
+        placesOfInterestCoordinates[i][3] = 1.0f;
+        
+        // Add struct containing distance and index to orderedDistances
+        DistanceAndIndex distanceAndIndex;
+        distanceAndIndex.distance = sqrtf(n*n + e*e);
+        distanceAndIndex.index = i;
+        [orderedDistances insertObject:[NSData dataWithBytes:&distanceAndIndex length:sizeof(distanceAndIndex)] atIndex:i++];
+    }
     
     
-    NSLog(@"ARView after: %@", self);
+    // Sort orderedDistances in ascending order based on distance from the user
+    [orderedDistances sortUsingComparator:(NSComparator)^(NSData *a, NSData *b) {
+        const DistanceAndIndex *aData = (const DistanceAndIndex *)a.bytes;
+        const DistanceAndIndex *bData = (const DistanceAndIndex *)b.bytes;
+        if (aData->distance < bData->distance) {
+            return NSOrderedAscending;
+        } else if (aData->distance > bData->distance) {
+            return NSOrderedDescending;
+        } else {
+            return NSOrderedSame;
+        }
+    }];
+    // Add subviews in descending Z-order so they overlap properly
+    for (NSData *d in [orderedDistances reverseObjectEnumerator]) {
+        const DistanceAndIndex *distanceAndIndex = (const DistanceAndIndex *)d.bytes;
+        PlaceOfInterest *poi = (PlaceOfInterest *)[placesOfInterest objectAtIndex:distanceAndIndex->index];
+        [self addSubview:poi.view];
+    }
 }
+
 
 
 - (void)checkDeviceAuthorizationStatus
@@ -312,7 +501,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
     }];
 }
 
-#pragma mark Device Configuration
+#pragma mark - Device Configuration
 
 - (void)focusWithMode:(AVCaptureFocusMode)focusMode exposeWithMode:(AVCaptureExposureMode)exposureMode atDevicePoint:(CGPoint)point monitorSubjectAreaChange:(BOOL)monitorSubjectAreaChange
 {
@@ -376,7 +565,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 }
 
 #pragma mark - camera setup
-
+#if false
 - (void) initialSession
 {
     //这个方法的执行我放在init方法里了
@@ -434,329 +623,13 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
         
     }
 }
-/*
- 2015-01-29
- The startCameraPreview's flow chart
- 1.AVCaptureDevice              defaultDeviceWithMediaType:AVMediaTypeVideo
- 2.AVCaptureDeviceInput         initWithDevice:AVCaptureDevice
- 3.AVCaptureSession             addInput:AVCaptureDeviceInput
- 4.AVCaptureVideoPreviewLayer   initWithSession:AVCaptureSession
- 5.UIView.layer                 addSublayer:AVCaptureVideoPreviewLayer
- 6.dispatch_async               AVCaptureSession
- */
-
-#define SCP
-- (void)startCameraPreview
-{
-#ifdef  SCP
-    AVCaptureDevice* camera = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    if (camera == nil) {
-        NSLog(@"camera == nil");
-
-        return;
-    }
-    
-    captureSession = [[AVCaptureSession alloc] init];
-    AVCaptureDeviceInput *newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:camera error:nil];
-    [captureSession addInput:newVideoInput];
-    
-    captureLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:captureSession];
-    captureLayer.frame = captureView.bounds;
-    if ([captureLayer respondsToSelector:@selector(connection)]) {
-        if ([captureLayer.connection isVideoOrientationSupported]) {
-            NSLog(@"isVideoOrientationSupported");
-            [captureLayer.connection setVideoOrientation:AVCaptureVideoOrientationPortrait];
-        }
-    }
-    [captureLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    [captureView.layer addSublayer:captureLayer];
-    
-    // Start the session. This is done asychronously since -startRunning doesn't return until the session is running.
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [captureSession startRunning];
-    });
-    
-#else
-    AVCaptureSession *session = [[AVCaptureSession alloc] init];
-    [self setSession:session];
-    
-    // Setup the preview view
-//    [self setSession:session];
-    
-    // Check for device authorization
-    [self checkDeviceAuthorizationStatus];
-    
-    // In general it is not safe to mutate an AVCaptureSession or any of its inputs, outputs, or connections from multiple threads at the same time.
-    // Why not do all of this on the main queue?
-    // -[AVCaptureSession startRunning] is a blocking call which can take a long time. We dispatch session setup to the sessionQueue so that the main queue isn't blocked (which keeps the UI responsive).
-    
-    dispatch_queue_t sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
-    [self setSessionQueue:sessionQueue];
-    
-    dispatch_async(sessionQueue, ^{
-        [self setBackgroundRecordingID:UIBackgroundTaskInvalid];
-        
-        NSError *error = nil;
-        
-        AVCaptureDevice *videoDevice = [AVCamPreviewView deviceWithMediaType:AVMediaTypeVideo preferringPosition:AVCaptureDevicePositionBack];
-        AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
-        
-        if (error)
-        {
-            NSLog(@"%@", error);
-        }
-        
-        if ([session canAddInput:videoDeviceInput])
-        {
-            [session addInput:videoDeviceInput];
-            [self setVideoDeviceInput:videoDeviceInput];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // Why are we dispatching this to the main queue?
-                // Because AVCaptureVideoPreviewLayer is the backing layer for AVCamPreviewView and UIView can only be manipulated on main thread.
-                // Note: As an exception to the above rule, it is not necessary to serialize video orientation changes on the AVCaptureVideoPreviewLayer’s connection with other session manipulation.
-                
-                [[(AVCaptureVideoPreviewLayer *)[self layer] connection] setVideoOrientation:AVCaptureVideoOrientationPortrait];
-            });
-        }
-        
-    });
-    
-    dispatch_async([self sessionQueue], ^{
-        [[self session] startRunning];
-    });
 #endif
-}
 
-- (void)stopCameraPreview
-{
-#ifdef SCP
-    [captureSession stopRunning];
-    [captureLayer removeFromSuperlayer];
-    captureSession = nil;
-    captureLayer = nil;
-#else
-    
-#endif
-    
-}
-
-- (void)startDeviceMotion
-{
-    motionManager = [[CMMotionManager alloc] init];
-    
-    // Tell CoreMotion to show the compass calibration HUD when required to provide true north-referenced attitude
-    motionManager.showsDeviceMovementDisplay = YES;
-    
-    
-    motionManager.deviceMotionUpdateInterval = 1.0 / 60.0;
-    
-    // New in iOS 5.0: Attitude that is referenced to true north
-    [motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
-}
-
-- (void)stopDeviceMotion
-{
-    [motionManager stopDeviceMotionUpdates];
-    motionManager = nil;
-}
-
-- (void)startDisplayLink
-{
-    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(onDisplayLink:)];
-    [displayLink setFrameInterval:1];
-    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-}
-
-- (void)stopDisplayLink
-{
-    [displayLink invalidate];
-    displayLink = nil;
-}
-
-//#warning This is static test userLocation coordinate, should replace with realtime data.
-#define LATITUDE_GAODE      36.67825978
-#define LONGTITUDE_GAODE    117.05896659
-
-- (void)updatePlacesOfInterestCoordinates
-{
-    NSLog(@"updatePlacesOfInterestCoordinates");
-    if (placesOfInterestCoordinates != NULL) {
-        free(placesOfInterestCoordinates);
-    }
-    placesOfInterestCoordinates = (vec4f_t *)malloc(sizeof(vec4f_t)*placesOfInterest.count);
-    
-    int i = 0;
-    
-    double myX, myY, myZ;
-    //because AutoNavi's map sdk does not give altitude of poi, so set our altitude = 0 ,too. 2015-01-30
-//    latLonToEcef(currentLocation.coordinate.latitude, currentLocation.coordinate.longitude, currentLocation.altitude, &myX, &myY, &myZ);
-    latLonToEcef(currentLocation.coordinate.latitude, currentLocation.coordinate.longitude, 0, &myX, &myY, &myZ);
-    
-    // Array of NSData instances, each of which contains a struct with the distance to a POI and the
-    // POI's index into placesOfInterest
-    // Will be used to ensure proper Z-ordering of UIViews
-    typedef struct {
-        float distance;
-        int index;
-    } DistanceAndIndex;
-    NSMutableArray *orderedDistances = [NSMutableArray arrayWithCapacity:placesOfInterest.count];
-    
-    // Compute the world coordinates of each place-of-interest
-    for (PlaceOfInterest *poi in [[self placesOfInterest] objectEnumerator]) {
-        double poiX, poiY, poiZ, e, n, u;
-        //        NSLog(@"curLocation: %@", currentLocation);
-        //        NSLog(@"poi.poi.location.altitude: %f", poi.location.altitude);
-        
-        latLonToEcef(poi.location.coordinate.latitude, poi.location.coordinate.longitude, poi.location.altitude, &poiX, &poiY, &poiZ);
-        ecefToEnu(currentLocation.coordinate.latitude, currentLocation.coordinate.longitude, myX, myY, myZ, poiX, poiY, poiZ, &e, &n, &u);
-        
-        placesOfInterestCoordinates[i][0] = (float)n;
-        placesOfInterestCoordinates[i][1]= -(float)e;
-        placesOfInterestCoordinates[i][2] = (float)u;//0.0f;
-        placesOfInterestCoordinates[i][3] = 1.0f;
-        
-        // Add struct containing distance and index to orderedDistances
-        DistanceAndIndex distanceAndIndex;
-        distanceAndIndex.distance = sqrtf(n*n + e*e);
-        distanceAndIndex.index = i;
-        [orderedDistances insertObject:[NSData dataWithBytes:&distanceAndIndex length:sizeof(distanceAndIndex)] atIndex:i++];
-    }
-    
-    
-    // Sort orderedDistances in ascending order based on distance from the user
-    [orderedDistances sortUsingComparator:(NSComparator)^(NSData *a, NSData *b) {
-        const DistanceAndIndex *aData = (const DistanceAndIndex *)a.bytes;
-        const DistanceAndIndex *bData = (const DistanceAndIndex *)b.bytes;
-        if (aData->distance < bData->distance) {
-            return NSOrderedAscending;
-        } else if (aData->distance > bData->distance) {
-            return NSOrderedDescending;
-        } else {
-            return NSOrderedSame;
-        }
-    }];
-    // Add subviews in descending Z-order so they overlap properly
-    for (NSData *d in [orderedDistances reverseObjectEnumerator]) {
-        const DistanceAndIndex *distanceAndIndex = (const DistanceAndIndex *)d.bytes;
-        PlaceOfInterest *poi = (PlaceOfInterest *)[placesOfInterest objectAtIndex:distanceAndIndex->index];
-        [self addSubview:poi.view];
-    }
-}
-
-- (void)onDisplayLink:(id)sender
-{
-    CMDeviceMotion *d = motionManager.deviceMotion;
-    //    NSLog(@"motionManager: %@",motionManager);
-    if (d != nil) {
-        CMRotationMatrix r = d.attitude.rotationMatrix;
-        currentYaw = d.attitude.yaw;
-#if false
-        NSLog(@"motionManager.attitude: %@",d.attitude);
-        //        NSLog(@")
-        NSLog(@"motionManager.quaternion: w: %f, x: %f, y: %f, z: %f",
-              d.attitude.quaternion.w, d.attitude.quaternion.x, d.attitude.quaternion.y, d.attitude.quaternion.z);
-        NSLog(@"CMRotationMatrix: \nr.m11: %f, r.m12: %f, r.m13: %f, \nr.m21: %f, r.m22: %f, r.m23: %f, \nr.m31: %f, r.m32: %f, r.m33: %f",
-              r.m11,r.m12,r.m13,
-              r.m21,r.m22,r.m23,
-              r.m31,r.m32,r.m33);
-#endif
-        
-        transformFromCMRotationMatrixStd(cameraTransform, &r);
-        [self setNeedsDisplay];
-    }
-}
-
-- (void)drawRect:(CGRect)rect
-{
-    if (placesOfInterestCoordinates == nil) {
-        return;
-    }
-    
-    mat4f_t projectionCameraTransform;
-    
-    multiplyMatrixAndMatrixStd(projectionCameraTransform, projectionTransform, cameraTransform);
-#if false
-    NSLog(@"projectionCameraTransform");
-    for (int i = 0; i<4; i++) {
-        NSLog(@"%f %f %f %f",projectionCameraTransform[i*4],projectionCameraTransform[i*4+1],projectionCameraTransform[i*4+2],projectionCameraTransform[i*4+3]);
-    }
-    
-    NSLog(@"projectionTransform");
-    for (int i = 0; i<4; i++) {
-        NSLog(@"%f %f %f %f",projectionTransform[i*4],projectionTransform[i*4+1],projectionTransform[i*4+2],projectionTransform[i*4+3]);
-    }
-    
-    NSLog(@"projectionTransform");
-    for (int i = 0; i<4; i++) {
-        NSLog(@"%f %f %f %f",cameraTransform[i*4],cameraTransform[i*4+1],cameraTransform[i*4+2],cameraTransform[i*4+3]);
-    }
-#endif
-    int i = 0;
-    static BOOL coYaw = true;
-    for (PlaceOfInterest *poi in [placesOfInterest objectEnumerator]) {
-        vec4f_t v;
-        //        NSLog(@"poi.view: %@",poi.view);
-        multiplyMatrixAndVectorStd(v, projectionCameraTransform, placesOfInterestCoordinates[i]);
-        //        NSLog(@"v[]: %f, %f, %f, %f", v[0],v[1],v[2],v[3]);
-        
-        float x = (v[0] / v[3] + 1.0f) * 0.5f;
-        float y = (v[1] / v[3] + 1.0f) * 0.5f;
-        if (v[2] < 0.0f) {
-            //			poi.view.center = CGPointMake(x*self.bounds.size.width, self.bounds.size.height-y*self.bounds.size.height);
-            // because iOS device's origin(0,0) is on the top left of the screen, and the projection coordinate's origin
-            // is at the bottom left of the screen, so we inverse y axis upsidedown, and keep x axis no change.
-            poi.view.center = CGPointMake(x*self.bounds.size.width, self.bounds.size.height-y*self.bounds.size.height);
-            poi.view.hidden = NO;
-            
-        } else {
-            poi.view.hidden = YES;
-        }
-        oldYaw = currentYaw;
-        coYaw = !coYaw;
-        i++;
-    }
-    
-}
-
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self initialize];
-    }
-    return self;
-}
-
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self initialize];
-    }
-    return self;
-}
-
-#pragma mark - AVCamPreviewView Init
-
-+ (Class)layerClass
-{
-	return [AVCaptureVideoPreviewLayer class];
-}
-
-- (AVCaptureSession *)session
-{
-	return [(AVCaptureVideoPreviewLayer *)[self layer] session];
-}
-
-- (void)setSession:(AVCaptureSession *)session
-{
-    ((AVPlayerLayer *)[self layer]).videoGravity = AVLayerVideoGravityResizeAspectFill;
-    ((AVPlayerLayer *)[self layer]).bounds = ((AVPlayerLayer *)[self layer]).bounds;
-	[(AVCaptureVideoPreviewLayer *)[self layer] setSession:session];
-}
 
 @end
+
+
+
 
 #pragma mark -
 #pragma mark Math utilities definition STD Version
