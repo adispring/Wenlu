@@ -268,6 +268,7 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 
 - (void)stopCameraPreview
 {
+//    
     [captureSession stopRunning];
     [captureLayer removeFromSuperlayer];
     captureSession = nil;
@@ -406,6 +407,13 @@ void ecefToEnu(double lat, double lon, double x, double y, double z, double xr, 
 - (NSArray *)placesOfInterest
 {
     return placesOfInterest;
+}
+
+- (void)removePlacesOfInterest:(NSMutableArray *)pois
+{
+    for (PlaceOfInterest *poi in [placesOfInterest objectEnumerator]) {
+        [poi.view removeFromSuperview];
+    }
 }
 
 - (void)updatePlacesOfInterestCoordinates

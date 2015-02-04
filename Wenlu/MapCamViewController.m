@@ -31,6 +31,7 @@
 
 @property (weak, nonatomic) IBOutlet AVCamPreviewView *mapPreviewView;
 @property (nonatomic, strong) NSArray *placesOfInterest;
+@property (nonatomic, strong) NSMutableArray *pOfI;
 
 @property (nonatomic, strong) MAMapView *mapView;
 @property (nonatomic, strong) AMapSearchAPI *search;
@@ -83,11 +84,12 @@
     
     // Create array of hard-coded places-of-interest, in this case some famous parks
     
-    NSMutableArray *pOfI = [NSMutableArray array];
+    self.pOfI = [NSMutableArray array];
     for (AMapPOI *poigd in placesOfI){
         UILabel *label = [[UILabel alloc] init];
         label.adjustsFontSizeToFitWidth = NO;
         label.opaque = NO;
+        label.hidden = YES;
         label.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:0.5f];
         label.center = CGPointMake(200.0f, 200.0f);
         label.textAlignment = NSTextAlignmentCenter;
@@ -99,10 +101,16 @@
         
         PlaceOfInterest *poi = [PlaceOfInterest placeOfInterestWithView:label at:[[CLLocation alloc] initWithLatitude:poigd.location.latitude longitude:poigd.location.longitude]];
         //            NSLog(@"poigd.location.longitude: %@",poigd.)
-        [pOfI addObject:poi];
+        [self.pOfI addObject:poi];
     }
     
-    [mapView setPlacesOfInterest:pOfI];
+    [mapView setPlacesOfInterest:self.pOfI];
+}
+
+- (void)removePOIWithPlaces:(NSMutableArray *)placesOfI
+{
+    AVCamPreviewView *mapView = (AVCamPreviewView *)self.view;
+    [mapView removePlacesOfInterest:placesOfI];
 }
 
 #pragma - Check iPAD status
@@ -247,8 +255,7 @@
 {
 #ifndef MCVC
     [super viewWillAppear:animated];
-    AVCamPreviewView *mapView = (AVCamPreviewView *)self.view;
-    [mapView start];
+
 #else
     dispatch_async([self sessionQueue], ^{
         [[self session] startRunning];
@@ -256,6 +263,20 @@
 #endif
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    AVCamPreviewView *mapView = (AVCamPreviewView *)self.view;
+    [mapView start];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    AVCamPreviewView *mapView = (AVCamPreviewView *)self.view;
+    [mapView removePlacesOfInterest:self.pOfI];
+    [mapView stop];
+}
 - (void)viewDidDisappear:(BOOL)animated
 {
     

@@ -19,5 +19,6 @@
 
 - (void)start;
 - (void)stop;
+- (void)removePlacesOfInterest:(NSMutableArray *)pois;
 
 @end
