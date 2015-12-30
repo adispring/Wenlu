@@ -19,9 +19,10 @@
 #define kDefaultLocationZoomLevel       16.1
 #define kDefaultControlMargin           22
 
-@interface MenuViewController ()<MAMapViewDelegate, AMapSearchDelegate, UITableViewDataSource, UITableViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate>
+@interface MenuViewController ()<MAMapViewDelegate, AMapSearchDelegate, UITableViewDataSource, UITableViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate, UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *searchBarButton;
+@property (weak, nonatomic) IBOutlet UITextField *searchTextField;
 
 
 @property (nonatomic, strong) MAMapView *mapView;
@@ -68,6 +69,7 @@
     [self initControls];
     [self initTableView];
     [self initAttributes];
+    self.searchTextField.delegate = self;
 }
 
 - (NSUInteger)supportedInterfaceOrientations
@@ -412,5 +414,26 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark input delegate
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (![textField.text isEqualToString:@""]) {
+        [self searchAction:textField.text];
+    }
+    [textField resignFirstResponder];
+    return YES;
+}
 
 @end

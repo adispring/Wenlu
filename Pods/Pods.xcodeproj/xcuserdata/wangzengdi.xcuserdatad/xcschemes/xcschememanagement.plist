@@ -4,16 +4,6 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Pods-AMap3DMap.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Pods-AMapSearch.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -22,17 +12,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>42BE91CBDCEEF3C719DEE785</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>9EED1651B659E29C02C1E4AE</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>F8FB4C57DD2A286247D18278</key>
+		<key>1469924FC52F60B0068FA24EEFCB3EFC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
